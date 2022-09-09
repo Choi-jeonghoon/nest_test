@@ -9,12 +9,16 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { Movie } from './entities/Movie.entity';
+import { MoviesService } from './movies.service';
 
 @Controller('movies')
 export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
+
   @Get()
-  getAll() {
-    return 'This will return all movies';
+  getAll(): Movie[] {
+    return this.moviesService.getAll();
   }
 
   @Get('search')
@@ -23,18 +27,19 @@ export class MoviesController {
   }
 
   @Get('/:id')
-  getOne(@Param('id') moviesId: string) {
-    return `This will return on movies with the id: ${moviesId}`;
+  getOne(@Param('id') moviesId: string): Movie {
+    return this.moviesService.getOnd(moviesId);
   }
   @Post()
   create(@Body() movieData) {
-    return movieData;
+    return this.moviesService.create(movieData);
   }
 
   @Delete('/:id')
   remove(@Param('id') moviesId: string) {
-    return `This wil delete a movies with the id:${moviesId}`;
+    return this.moviesService.deleteOnd(moviesId);
   }
+
   @Patch('/:id') // put 은 전체 업데이트를 할때 사용하고 patch는 일부분만 수정할때 사용한다.
   patch(@Param('id') moviesId: string, @Body() updataData) {
     return {
