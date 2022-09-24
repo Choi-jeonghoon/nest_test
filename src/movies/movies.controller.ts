@@ -9,6 +9,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { CreateMoviceDto } from './dto/create-movice.dto';
 import { Movie } from './entities/Movie.entity';
 import { MoviesService } from './movies.service';
 
@@ -27,24 +28,23 @@ export class MoviesController {
   }
 
   @Get('/:id')
-  getOne(@Param('id') moviesId: string): Movie {
-    return this.moviesService.getOnd(moviesId);
+  getOne(@Param('id') moviesId: number): Movie {
+    console.log(typeof moviesId);
+    return this.moviesService.getOne(moviesId);
   }
+
   @Post()
-  create(@Body() movieData) {
+  create(@Body() movieData: CreateMoviceDto) {
     return this.moviesService.create(movieData);
   }
 
   @Delete('/:id')
-  remove(@Param('id') moviesId: string) {
+  remove(@Param('id') moviesId: number) {
     return this.moviesService.deleteOnd(moviesId);
   }
 
   @Patch('/:id') // put 은 전체 업데이트를 할때 사용하고 patch는 일부분만 수정할때 사용한다.
-  patch(@Param('id') moviesId: string, @Body() updataData) {
-    return {
-      updatedMovie: moviesId,
-      updataData,
-    };
+  patch(@Param('id') moviesId: number, @Body() updataData) {
+    return this.moviesService.updata(moviesId, updataData);
   }
 }
