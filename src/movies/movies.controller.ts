@@ -8,8 +8,11 @@ import {
   Post,
   Put,
   Query,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { CreateMoviceDto } from './dto/create-movice.dto';
+import { UpdateMoviceDto } from './dto/update-movie.dto';
 import { Movie } from './entities/Movie.entity';
 import { MoviesService } from './movies.service';
 
@@ -44,7 +47,7 @@ export class MoviesController {
   }
 
   @Patch('/:id') // put 은 전체 업데이트를 할때 사용하고 patch는 일부분만 수정할때 사용한다.
-  patch(@Param('id') moviesId: number, @Body() updataData) {
-    return this.moviesService.updata(moviesId, updataData);
+  patch(@Param('id') moviesId: number, @Body() updataData: UpdateMoviceDto) {
+    return this.moviesService.update(moviesId, updataData);
   }
 }
