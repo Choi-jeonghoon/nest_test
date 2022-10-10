@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { title } from 'process';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -40,12 +41,22 @@ describe('AppController (e2e)', () => {
         .expect(200)
         .expect('[]');
     });
-    it('POST', () => {
+
+    it('POST 201', () => {
       return request(app.getHttpServer())
         .post('/movies')
         .send({ title: 'Test', year: 2000, genres: ['test'] })
         .expect(201);
     });
+
+    //잘못된 데이터값을 테스트하기위해서 아래와 이 other값이라는 것을 추가하여 400 보내준다는 의미로 작성
+    it('POST 400', () => {
+      return request(app.getHttpServer())
+        .post('/movies')
+        .send({ title: 'Test', year: 2000, genres: ['test'], other: 'thing' })
+        .expect(400);
+    });
+
     it('DELETE', () => {
       return request(app.getHttpServer()).delete('/movies').expect(404);
     });
@@ -55,10 +66,20 @@ describe('AppController (e2e)', () => {
     it('GET 200', () => {
       return request(app.getHttpServer()).get('/movies/1').expect(200);
     });
+
     it('GET 404', () => {
       return request(app.getHttpServer()).get('/movies/999').expect(404);
     });
-    it.todo('DELETE');
-    it.todo('PATCH');
+
+    it('PATCH', () => {
+      return request(app.getHttpServer())
+        .patch('/movies/1')
+        .send({ title: 'Updated Test' })
+        .expect(200);
+    });
+
+    it('DELETE', () => {
+      return request(app.getHttpServer()).delete('/movies/1').expect(200);
+    });
   });
 });
